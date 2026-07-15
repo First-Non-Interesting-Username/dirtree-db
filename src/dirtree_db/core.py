@@ -1,6 +1,8 @@
+from multiprocessing import Value
 import tomllib
 import json
 import os
+import re
 from typing import Any
 from jsonschema import ValidationError as JSONSchemaValidationError
 from jsonschema import validate
@@ -67,6 +69,24 @@ class Database:
                         raise ValueError(f"Schema file {schema_path} contains incorrect JSON") from error
 
                 entity["schema"] = schema_content
+
+            path_template = entity["path_template"]
+            segments = path_template.split('/')
+            if len(segments) < 2:
+                raise ValueError(f"Declared path_template for {name!r} must have at least 2 segments")
+            if len(segments[0]) == 0:
+                raise ValueError(f"Declared path_template for {name!r} is an absolute path")
+            if segments[0].startswith('{'):
+                raise ValueError(f"Declared path_template for {name!r} does not start with literal directory")
+            if segments[-1] != "{slug}":
+                raise ValueError(f"Declared path_template for {name!r} does not end with '{{slug}}'")
+
+            slug_template = entity["slug_template"]
+
+            if not slug_template.endswith(".json"):
+                raise ValueError(f"Declared slug_template for {name!r} does not end with '.json'")
+
+
 
             self.entities[name] = entity
 
@@ -144,3 +164,31 @@ class Database:
     def exists(self, entity_name: str, /, **kwargs):
         path_to_file = self._route(entity_name, **kwargs)
         return path_to_file.exists()
+
+    def list(self, entity_name: str, /):
+        entity = self._get_entity(entity_name)
+        escaped = re.escape(entity["path_template"])
+        regex_str = re.sub(r'\\{.+?\\}', r'[^/]+', escaped)
+        pattern = re.compile(regex_str)
+
+        matched_files: list[Path] = []
+        for file_path in self.data_dir.rglob("*.json"):
+            if not file_path.is_file():
+                continue
+            relative = file_path.relative_to(self.data_dir).as_posix()
+            if pattern.fullmatch(relative):
+                matched_files.append(file_path)
+        return matched_files
+
+    def delete(self, entity_name: str, /, *, prune: bool = True, **kwargs):
+        path_to_file = self._route(entity_name, **kwargs)
+        parent = path_to_file.parent
+        path_to_file.unlink()
+        if prune:
+            while parent != self.data_dir:
+                parent_of_parent = parent.parent
+                try:
+                    parent.rmdir()
+                except OSError:
+                    break
+                parent = parent_of_parent
