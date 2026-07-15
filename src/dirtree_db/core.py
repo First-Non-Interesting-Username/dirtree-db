@@ -1,7 +1,10 @@
-from pathlib import Path
 import tomllib
 import json
+import os
 from typing import Any
+from jsonschema import ValidationError as JSONSchemaValidationError
+from jsonschema import validate
+from pathlib import Path
 
 class StoreNotFoundError(FileNotFoundError):
     pass
@@ -54,7 +57,7 @@ class Database:
                 schema_path = self.root / schema
 
                 if not schema_path.exists():
-                    raise FileNotFoundError(f"Declared schema file for {name!r} does not exist."
+                    raise FileNotFoundError(f"Declared schema file for {name!r} does not exist"
                         f"Expected path: {schema_path}")
 
                 try:
@@ -65,6 +68,79 @@ class Database:
 
                 entity["schema"] = schema_content
 
-
-
             self.entities[name] = entity
+
+    def _get_entity(self, entity_name):
+        if entity_name not in self.entities:
+            raise UnknownEntityError(f"Entity {entity_name} does not exist")
+        return self.entities[entity_name]
+
+    def _route(self, entity_name, **kwargs):
+        entity = self._get_entity(entity_name)
+
+        path_template = entity["path_template"]
+
+        slug_template = entity["slug_template"]
+
+        try:
+            slug = slug_template.format(**kwargs)
+            all_vars = {**kwargs, "slug": slug}
+            relative_path = path_template.format(**all_vars)
+        except KeyError as error:
+            raise PathKeyError(f"missing template field {error.args[0]}") from error
+
+        full_path = self.data_dir / relative_path
+
+        return full_path
+
+    def write(self, entity_name: str, /, *, data: dict, **kwargs):
+        entity = self._get_entity(entity_name)
+
+        schema = entity.get("schema", None)
+
+        if schema is not None:
+            try:
+                validate(data, schema)
+            except JSONSchemaValidationError as error:
+                raise ValidationError(error.message) from error
+
+        path_to_file = self._route(entity_name, **kwargs)
+
+        path_to_file.parent.mkdir(parents=True, exist_ok=True)
+
+        json_string = json.dumps(data, sort_keys=True, indent=2, ensure_ascii=False) + '\n'
+
+        tmp = path_to_file.with_suffix(".json.tmp")
+        tmp.write_text(json_string, encoding="utf-8")
+        os.replace(tmp, path_to_file)
+
+        return path_to_file
+
+    def read(self, entity_name: str, /, **kwargs):
+        entity = self._get_entity(entity_name)
+
+        path_to_file = self._route(entity_name, **kwargs)
+
+        try:
+            with path_to_file.open("r", encoding="utf-8") as file:
+                data = json.load(file)
+        except json.JSONDecodeError as error:
+            raise CorruptRecordError(
+                f"Record at {path_to_file} is not valid JSON: {error}"
+            ) from error
+
+        schema = entity.get("schema", None)
+
+        if schema is not None:
+            try:
+                validate(data, schema)
+            except JSONSchemaValidationError as error:
+                raise CorruptRecordError(
+                    f"Record at {path_to_file} fails schema validation: {error.message}"
+                ) from error
+
+        return data
+
+    def exists(self, entity_name: str, /, **kwargs):
+        path_to_file = self._route(entity_name, **kwargs)
+        return path_to_file.exists()
