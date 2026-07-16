@@ -192,3 +192,23 @@ class Database:
                 except OSError:
                     break
                 parent = parent_of_parent
+
+    def validate_all(self):
+        errors = []
+        for entity_name in self.entities:
+            entity = self._get_entity(entity_name)
+            schema = entity.get("schema", None)
+            for path in self.list(entity_name):
+                try:
+                    with path.open("r", encoding="utf-8") as file:
+                        data = json.load(file)
+                except json.JSONDecodeError as error:
+                        errors.append(f"Record at {path} is not valid JSON: {error}")
+                else:
+                    if schema is not None:
+                        try:
+                            validate(data, schema)
+                        except JSONSchemaValidationError as error:
+                                errors.append(f"Record at {path} fails schema validation: {error.message}")
+
+        return errors
