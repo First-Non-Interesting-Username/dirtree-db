@@ -233,7 +233,7 @@ def test_empty_entity_list(tmp_path):
     config_path.write_text(config_string, encoding="utf-8")
     db = Database(tmp_path)
 
-def test_empty_entity_list(tmp_path):
+def test_duplicate_entries(tmp_path):
     config_path = tmp_path / "config.toml"
     config_string = """
         [store]
