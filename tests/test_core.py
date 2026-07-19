@@ -157,16 +157,31 @@ def test_list(db_root, db_config):
             break
         path, kwargs_dict = resolve_entity_params(db, entity)
         record_string = '{"example": "example"}'
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(record_string, encoding="utf-8")
-        list = db.list(entity_name)
-        assert len(list) > 0 and all(item == path for item in list)
-
-        segments = path_template.split('/')
-        wrong_path = segments[0] / slug_template
-
-        wrong_path.write_text(record_string, encoding="utf-8")
-
-        assert len(list) > 0 and all(item == path for item in list)
+        result = db.list(entity_name)
+        assert len(result) > 0 and all(item == path for item in result)
 
         path.unlink()
-        assert len(list) == 0
+        result = db.list(entity_name)
+        assert len(result) == 0
+
+def test_delete(db_root, db_config):
+    db, config = db_config
+    for entity in config.get("entity", []):
+        schema = entity.get("schema")
+        path_template = entity["path_template"]
+        slug_template = entity["slug_template"]
+        entity_name = entity["name"]
+        path, kwargs_dict = resolve_entity_params(db, entity)
+        record_string = '{"example": "example"}'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(record_string, encoding="utf-8")
+
+        db.delete(entity_name, prune=True, **kwargs_dict)
+        assert not path.parent.exists() and not path.exists()
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(record_string, encoding="utf-8")
+        db.delete(entity_name, prune=False, **kwargs_dict)
+        assert path.parent.exists() and not path.exists()
