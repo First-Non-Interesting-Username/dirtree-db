@@ -1,5 +1,7 @@
+import json
 from pathlib import Path
 from dirtree_db import *
+from jsf import JSF
 import tomllib
 import re
 import string
@@ -133,3 +135,57 @@ def test_errors(db_root):
 def test_no_config(tmp_path):
     with pytest.raises(StoreNotFoundError):
         db = Database(tmp_path)
+
+def test_schema(db_root):
+    db = Database(db_root)
+    config_path = db_root / "config.toml"
+    with config_path.open("rb") as file:
+        config = tomllib.load(file)
+    entities_list = config.get("entity", [])
+
+    for entity in entities_list:
+         schema = entity.get("schema", None)
+         path_template = entity["path_template"]
+         slug_template = entity["slug_template"]
+
+         segments = path_template.split('/')
+         path = ""
+
+         kwargs_dict = {}
+
+         for segment in segments:
+             if segment[0] == "{":
+                 segment = segment[1:-1]
+             if segment != "slug":
+                 path = path + segment + '/'
+                 if segment not in kwargs_dict:
+                     kwargs_dict[segment] = segment
+
+         slug_segments = re.findall(r"\{(.*?)\}", slug_template)
+         slug = slug_template.replace("{", "").replace("}", "")
+
+         path = path + slug
+         path = (db.data_dir / path).resolve()
+
+         for segment in slug_segments:
+             if segment not in kwargs_dict:
+                 kwargs_dict[segment] = segment
+
+         entity_name = entity["name"]
+         if schema is not None:
+             schema_path = (db_root / schema).resolve()
+
+             with schema_path.open("rb") as file:
+                 schema_dict = json.load(file)
+
+             faker = JSF(schema_dict)
+             fake_order = faker.generate()
+             db.write(entity_name, **kwargs_dict, data=fake_order)
+             with pytest.raises(ValidationError):
+                 db.write(entity_name, **kwargs_dict, data ={"example": "example"})
+             with pytest.raises(CorruptRecordError):
+                 wrong_string = """
+                 {"example": "example"}
+                 """
+                 path.write_text(wrong_string, encoding="utf-8")
+                 db.read(entity_name, **kwargs_dict)
