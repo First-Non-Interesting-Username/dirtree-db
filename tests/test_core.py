@@ -166,12 +166,9 @@ def test_list(db_root, db_config):
         result = db.list(entity_name)
         assert len(result) == 0
 
-def test_delete(db_root, db_config):
+def test_delete(db_config):
     db, config = db_config
     for entity in config.get("entity", []):
-        schema = entity.get("schema")
-        path_template = entity["path_template"]
-        slug_template = entity["slug_template"]
         entity_name = entity["name"]
         path, kwargs_dict = resolve_entity_params(db, entity)
         record_string = '{"example": "example"}'
@@ -185,3 +182,42 @@ def test_delete(db_root, db_config):
         path.write_text(record_string, encoding="utf-8")
         db.delete(entity_name, prune=False, **kwargs_dict)
         assert path.parent.exists() and not path.exists()
+
+def test_validate_all(db_root, db_config):
+    db, config = db_config
+
+    assert db.validate_all() == []
+
+    for entity in config.get("entity", []):
+        schema = entity.get("schema")
+        entity_name = entity["name"]
+        path, kwargs_dict = resolve_entity_params(db, entity)
+
+        if schema is not None:
+            schema_path = (db_root / schema).resolve()
+            with schema_path.open("rb") as file:
+                schema_dict = json.load(file)
+
+            faker = JSF(schema_dict)
+            fake_record = faker.generate()
+            db.write(entity_name, kwargs_dict, data=fake_record)
+            assert db.validate_all() == []
+
+            path.write_text('{"example": "example"}', encoding="utf-8")
+            errors = db.validate_all()
+            assert len(errors) > 0
+            assert any(str(path) in error for error in errors)
+
+            path.write_text("not valid json", encoding="utf-8")
+            errors = db.validate_all()
+            assert len(errors) > 0
+            assert any(str(path) in error for error in errors)
+
+            path.unlink()
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("not valid json", encoding="utf-8")
+            errors = db.validate_all()
+            assert len(errors) > 0
+            assert any(str(path) in error for error in errors)
+            path.unlink()
