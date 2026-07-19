@@ -200,7 +200,7 @@ def test_validate_all(db_root, db_config):
 
             faker = JSF(schema_dict)
             fake_record = faker.generate()
-            db.write(entity_name, kwargs_dict, data=fake_record)
+            db.write(entity_name, **kwargs_dict, data=fake_record)
             assert db.validate_all() == []
 
             path.write_text('{"example": "example"}', encoding="utf-8")
@@ -221,3 +221,35 @@ def test_validate_all(db_root, db_config):
             assert len(errors) > 0
             assert any(str(path) in error for error in errors)
             path.unlink()
+
+def test_empty_entity_list(tmp_path):
+    config_path = tmp_path / "config.toml"
+    config_string = """
+        [store]
+        data_dir = "data"
+        name = "test"
+    """
+
+    config_path.write_text(config_string, encoding="utf-8")
+    db = Database(tmp_path)
+
+def test_empty_entity_list(tmp_path):
+    config_path = tmp_path / "config.toml"
+    config_string = """
+        [store]
+        data_dir = "data"
+        name = "test"
+
+        [[entity]]
+        name = "duplicate"
+        path_template = "duplicate/{slug}
+        slug_template = "duplicate.json
+        [[entity]]
+        name = "duplicate"
+        path_template = "duplicate/{slug}
+        slug_template = "duplicate.json
+    """
+
+    config_path.write_text(config_string, encoding="utf-8")
+    with pytest.raises(ValueError):
+        db = Database(tmp_path)
