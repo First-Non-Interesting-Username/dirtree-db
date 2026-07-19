@@ -145,3 +145,28 @@ def test_schema(db_root, db_config):
                 wrong_string = '{"example": "example"}'
                 path.write_text(wrong_string, encoding="utf-8")
                 db.read(entity_name, **kwargs_dict)
+
+def test_list(db_root, db_config):
+    db, config = db_config
+    for entity in config.get("entity", []):
+        schema = entity.get("schema")
+        path_template = entity["path_template"]
+        slug_template = entity["slug_template"]
+        entity_name = entity["name"]
+        if schema is not None:
+            break
+        path, kwargs_dict = resolve_entity_params(db, entity)
+        record_string = '{"example": "example"}'
+        path.write_text(record_string, encoding="utf-8")
+        list = db.list(entity_name)
+        assert len(list) > 0 and all(item == path for item in list)
+
+        segments = path_template.split('/')
+        wrong_path = segments[0] / slug_template
+
+        wrong_path.write_text(record_string, encoding="utf-8")
+
+        assert len(list) > 0 and all(item == path for item in list)
+
+        path.unlink()
+        assert len(list) == 0
