@@ -1,7 +1,10 @@
 from pathlib import Path
-from dirtree_db import Database
+from dirtree_db import *
 import tomllib
 import re
+import string
+import random
+import pytest
 
 
 def test_init(db_root):
@@ -69,3 +72,64 @@ def test_read_write(db_root):
         allegedly_data = db.read(entity_name, **kwargs_dict)
 
         assert data == allegedly_data
+
+def test_errors(db_root):
+    db = Database(db_root)
+    config_path = db_root / "config.toml"
+
+    with config_path.open("rb") as file:
+        config = tomllib.load(file)
+    entities_list = config.get("entity", [])
+
+    fake_entity_name = ''.join(random.choices(string.ascii_lowercase, k=20))
+
+    while fake_entity_name in entities_list:
+        length = 20
+        fake_entity_name = ''.join(random.choices(string.ascii_lowercase, k=length))
+        length = length + 1
+
+    with pytest.raises(UnknownEntityError):
+        db.read(fake_entity_name)
+
+    for entity in entities_list:
+        path_template = entity["path_template"]
+        slug_template = entity["slug_template"]
+        schema = entity.get("schema", None)
+        entity_name = entity["name"]
+
+        if path_template.count("{") == 4 and path_template.count("}") == 4 and slug_template.count("{") == 0 and slug_template.count("}") == 0 and schema is None:
+            with pytest.raises(PathKeyError):
+                db.write(entity_name, data ={"example": "example"})
+
+        segments = path_template.split('/')
+        path = ""
+
+        kwargs_dict = {}
+
+        for segment in segments:
+            if segment[0] == "{":
+                segment = segment[1:-1]
+            if segment != "slug":
+                path = path + segment + '/'
+                if segment not in kwargs_dict:
+                    kwargs_dict[segment] = segment
+
+        slug_segments = re.findall(r"\{(.*?)\}", slug_template)
+        slug = slug_template.replace("{", "").replace("}", "")
+
+        path = path + slug
+        path = (db.data_dir / path).resolve()
+
+        for segment in slug_segments:
+            if segment not in kwargs_dict:
+                kwargs_dict[segment] = segment
+
+        with pytest.raises(FileNotFoundError):
+            db.read(entity_name, **kwargs_dict)
+
+        with pytest.raises(FileNotFoundError):
+            db.delete(entity_name, **kwargs_dict)
+
+def test_no_config(tmp_path):
+    with pytest.raises(StoreNotFoundError):
+        db = Database(tmp_path)

@@ -14,6 +14,11 @@ def db_root(tmp_path):
         name = "language-model"
         path_template = "model/{lab}/{family}/{slug}"
         slug_template = "{lab}-{family}-{model}.json"
+
+        [[entity]]
+        name = "file"
+        path_template = "file/{definitely-wont-end-up-empty}/{slug}"
+        slug_template = "static.json"
         """
 
     config_path.write_text(config_string, encoding="utf-8")
