@@ -23,3 +23,10 @@ Issues = "https://github.com/First-Non-Interesting-Username/dirtree-db/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/dirtree_db"]
+
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "pytest-md",
+  "jsf",
+]
