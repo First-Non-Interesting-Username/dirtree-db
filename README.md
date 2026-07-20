@@ -34,7 +34,7 @@ You will need a `config.toml` file in the path selected when defining the databa
 name = "name"
 ```
 
-Usage of functions of the `Database` class and syntax of `config.toml` are explained in a [separate document](usage.md)
+Usage of functions of the `Database` class and syntax of `config.toml` are explained in a [separate document](https://github.com/First-Non-Interesting-Username/dirtree-db/blob/main/usage.md)
 
 There's also nix package available.
 
