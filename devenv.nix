@@ -11,6 +11,8 @@
         jsonschema
         jsf
         pytest
+        build
+        twine
       '';
     };
   };
