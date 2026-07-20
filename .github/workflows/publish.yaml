@@ -96,6 +96,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore(nix): update dirtree-db package and flake.lock"
           branch: update-nix-package
+          base: main
           delete-branch: true
           title: "chore(nix): update dirtree-db package"
           body: |
