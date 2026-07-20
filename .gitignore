@@ -230,3 +230,4 @@ devenv.local.yaml
 
 # Nix build artifacts
 result/
+result
