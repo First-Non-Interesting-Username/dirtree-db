@@ -35,3 +35,28 @@ name = "name"
 ```
 
 Usage of functions of the `Database` class and syntax of `config.toml` are explained in a [separate document](usage.md)
+
+There's also nix package available.
+
+If for some reason you want to use it, add this flake input to your flake:
+
+```nix
+dirtree-db.url = "github:first-non-interesting-username/dirtree-db";
+```
+
+You can then access this package in your flake as:
+
+```nix
+inputs.dirtree-db.packages.${pkgs.stdenv.hostPlatform.system}.dirtree-db
+```
+
+If the build is too demanding for you, cachix cache is available, paste that into your configuration:
+
+```nix
+nix.settings = {
+  extra-substituters = ["https://dirtree-db.cachix.org"];
+  extra-trusted-public-keys = [
+    "dirtree-db.cachix.org-1:geR/eeJBzFUNhj3mwjHm1EK/mzXIG/PF3Bg48YlF1ys="
+  ];
+};
+```
