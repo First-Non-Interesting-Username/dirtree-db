@@ -22,7 +22,7 @@ pip install dirtree-db
 Usage:
 
 ```python
-from dirtree-db import Database
+from dirtree_db import Database
 
 db = Database("path/to/directory/containing/config/toml")
 ```
