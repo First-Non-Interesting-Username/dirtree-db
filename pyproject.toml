@@ -27,8 +27,8 @@ packages = ["src/dirtree_db"]
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[project.optional-dependencies]
-test = [
+[tool.hatch.envs.test]
+dependencies = [
   "pytest",
   "pytest-md",
   "jsf @ git+https://github.com/ghandic/jsf.git@a37fccfee75daf14a5c3462555f8a3eb2b281b5c",
