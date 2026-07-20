@@ -65,6 +65,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Check out source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: true
+
       - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
 
       - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -81,3 +86,19 @@ jobs:
 
       - name: Update flake.lock
         run: nix flake update
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(nix): update dirtree-db package and flake.lock"
+          branch: update-nix-package
+          delete-branch: true
+          title: "chore(nix): update dirtree-db package"
+          body: |
+            Automated update triggered by the [publish workflow run #${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+
+            This bumps `default.nix` (via `nix-update`) and refreshes `flake.lock`.
+          labels: |
+            dependencies
+            automated
