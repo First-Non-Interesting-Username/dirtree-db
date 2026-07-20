@@ -6,7 +6,7 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "dirtree-db";
-  version = "0-unstable-2026-07-20";
+  version = "0.1,1";
   pyproject = true;
   __structuredAttrs = true;
 
