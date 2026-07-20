@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dirtree-db"
-version = "0.1.1"
+version = "0.1.2"
 description = "Plain file hierarchical database"
 readme = "README.md"
 requires-python = ">=3.11"
