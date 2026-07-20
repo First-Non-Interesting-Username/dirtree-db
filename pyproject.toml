@@ -32,4 +32,9 @@ test = [
   "pytest",
   "pytest-md",
   "jsf @ git+https://github.com/ghandic/jsf.git@a37fccfee75daf14a5c3462555f8a3eb2b281b5c",
+  "faker>=15.3.4",
+  "pydantic>=2.0.0",
+  "rstr>=3.2.0",
+  "smart-open[http]>=6.3.0",
+  "typing-extensions>=4.9.0",
 ]
