@@ -28,5 +28,5 @@ packages = ["src/dirtree_db"]
 test = [
   "pytest",
   "pytest-md",
-  "jsf",
+  "jsf @ git+https://github.com/ghandic/jsf.git@a37fccfee75daf14a5c3462555f8a3eb2b281b5c",
 ]
