@@ -33,6 +33,7 @@ jobs:
           verbose: true
           emoji: false
           job-summary: true
+          custom-pytest: hatch run test:pytest
           custom-arguments: '-q'
           click-to-expand: true
           report-title: 'Test Report'
