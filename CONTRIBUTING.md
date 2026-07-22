@@ -6,7 +6,7 @@ This is a learning project. Expect rough edges.
 
 ```bash
 # with devenv
-nix devenv
+devenv shell
 
 # with python
 python -m venv .venv && source .venv/bin/activate
