@@ -39,9 +39,9 @@ name = "name"
 
 Usage of functions of the `Database` class and syntax of `config.toml` are explained in a [separate document](https://github.com/First-Non-Interesting-Username/dirtree-db/blob/main/usage.md)
 
-There's also nix package available.
+### Nix
 
-If for some reason you want to use it, add this flake input to your flake:
+If for some reason you want to use nix for this library, add this flake input to your flake:
 
 ```nix
 dirtree-db.url = "github:first-non-interesting-username/dirtree-db";
@@ -63,3 +63,7 @@ nix.settings = {
   ];
 };
 ```
+
+## Tech stack
+
+This library is made using almost only Python standard libraries, [jsonschema](https://pypi.org/project/jsonschema/) is the only exception.

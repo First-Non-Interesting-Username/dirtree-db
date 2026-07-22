@@ -16,6 +16,14 @@ dependencies = [
     "jsonschema>=4.17",
 ]
 
+[project.optional-dependencies]
+dev = [\
+ "pytest",\
+ "build",\
+ "twine",\
+ "hatch",\
+]
+
 [project.urls]
 Homepage = "https://github.com/First-Non-Interesting-Username/dirtree-db"
 Repository = "https://github.com/First-Non-Interesting-Username/dirtree-db"

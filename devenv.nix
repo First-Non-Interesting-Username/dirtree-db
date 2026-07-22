@@ -13,6 +13,7 @@
         pytest
         build
         twine
+        hatch
       '';
     };
   };
