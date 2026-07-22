@@ -17,11 +17,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [\
- "pytest",\
- "build",\
- "twine",\
- "hatch",\
+dev = [
+    "pytest",
+    "build",
+    "twine",
+    "hatch",
 ]
 
 [project.urls]
