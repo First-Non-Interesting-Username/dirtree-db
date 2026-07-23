@@ -82,7 +82,7 @@ jobs:
           installCommand: "nix profile add nixpkgs#cachix"
 
       - name: Update package
-        run: nix run nixpkgs#nix-update -- --flake --version=branch hack
+        run: nix run nixpkgs#nix-update -- --flake --version=branch dirtree-db
 
       - name: Build package
         run: nix build .#dirtree-db
