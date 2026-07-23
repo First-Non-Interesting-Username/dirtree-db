@@ -17,4 +17,8 @@
       '';
     };
   };
+
+  enterTest = ''
+    hatch run test:pytest
+    '';
 }
