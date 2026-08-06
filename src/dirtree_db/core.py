@@ -24,8 +24,8 @@ class CorruptRecordError(Exception):
 
 
 class Database:
-    def __init__(self, root: Path):
-        self.root = root.expanduser().resolve()
+    def __init__(self, root: str | Path):
+        self.root = Path(root).expanduser().resolve()
 
         self.config_path = self.root / "config.toml"
 
