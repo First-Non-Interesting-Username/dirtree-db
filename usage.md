@@ -20,8 +20,9 @@ Initialise the database:
 
 ```python
 from dirtree_db import Database
+from pathlib import Path
 
-db = Database("path/to/db")
+db = Database(Path("path/to/db"))
 ```
 
 Write a record:

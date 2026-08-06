@@ -26,8 +26,9 @@ Usage:
 
 ```python
 from dirtree_db import Database
+from pathlib import Path
 
-db = Database("path/to/directory/containing/config/toml")
+db = Database(Path("path/to/directory/containing/config/toml"))
 ```
 
 You will need a `config.toml` file in the path selected when defining the database, this is a minimal functional example:
