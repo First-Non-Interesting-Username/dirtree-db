@@ -8,6 +8,9 @@ Hierarchical, plain file database-like python library.
 
 ![Hackatime Badge](https://hackatime.hackclub.com/api/v1/badge/U0A9Y38B28H/First-Non-Interesting-Username/dirtree-db)
 
+<img width="2560" height="1405" alt="basic usage showcase" src="https://github.com/user-attachments/assets/06697cfd-a866-4997-8666-1a132866c4c0" />
+
+
 > "Wow, this thing is stupid." - myself, 2026
 
 The main use case for this library is colaborative data collection in a git repo.
