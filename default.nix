@@ -6,15 +6,15 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "dirtree-db";
-  version = "0.1.2-unstable-2026-07-23";
+  version = "0.2.0-unstable-2026-08-21";
   pyproject = true;
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "First-Non-Interesting-Username";
     repo = "dirtree-db";
-    rev = "053245597a1a58f24ffaab4d62e8f392f92432f2";
-    hash = "sha256-VQu/B3mJdogOCqSPqYKliD6Z7VbEDwLNRj40bNGGhn0=";
+    rev = "d50fcbc305be0dabe747ea8199a9e830097360cb";
+    hash = "sha256-ft2b4tbQw9IJUYnVOzgxTqvWbcrx4hjH23oMK7xu9z4=";
   };
 
   build-system = [
