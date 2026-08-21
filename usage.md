@@ -73,10 +73,10 @@ The `data/` prefix comes from the `data_dir` setting (`"data"` by default).
 
 ## Listing records
 
-`db.list(entity_name)` returns every existing record file for an entity.
+`db.list_records(entity_name)` returns every existing record file for an entity.
 
 ```python
-for path in db.list("note"):
+for path in db.list_records("note"):
     print(path)
 ```
 

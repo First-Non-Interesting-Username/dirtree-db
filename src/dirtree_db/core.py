@@ -89,12 +89,12 @@ class Database:
 
             self.entities[name] = entity
 
-    def _get_entity(self, entity_name):
+    def _get_entity(self, entity_name) -> dict[str, Any]:
         if entity_name not in self.entities:
             raise UnknownEntityError(f"Entity {entity_name} does not exist")
         return self.entities[entity_name]
 
-    def _route(self, entity_name, **kwargs):
+    def _route(self, entity_name, **kwargs) -> Path:
         entity = self._get_entity(entity_name)
 
         path_template = entity["path_template"]
@@ -112,7 +112,7 @@ class Database:
 
         return full_path
 
-    def write(self, entity_name: str, /, *, data: dict, **kwargs):
+    def write(self, entity_name: str, /, *, data: dict, **kwargs) -> Path:
         entity = self._get_entity(entity_name)
 
         schema = entity.get("schema", None)
@@ -135,7 +135,7 @@ class Database:
 
         return path_to_file
 
-    def read(self, entity_name: str, /, **kwargs):
+    def read(self, entity_name: str, /, **kwargs) -> dict[str, Any]:
         entity = self._get_entity(entity_name)
 
         path_to_file = self._route(entity_name, **kwargs)
@@ -160,11 +160,11 @@ class Database:
 
         return data
 
-    def exists(self, entity_name: str, /, **kwargs):
+    def exists(self, entity_name: str, /, **kwargs) -> bool:
         path_to_file = self._route(entity_name, **kwargs)
         return path_to_file.exists()
 
-    def list(self, entity_name: str, /):
+    def list_records(self, entity_name: str, /) -> list[Path]:
         entity = self._get_entity(entity_name)
         escaped = re.escape(entity["path_template"])
         regex_str = re.sub(r'\\{.+?\\}', r'[^/]+', escaped)
@@ -179,7 +179,7 @@ class Database:
                 matched_files.append(file_path)
         return matched_files
 
-    def delete(self, entity_name: str, /, *, prune: bool = True, missing_ok: bool = False, **kwargs):
+    def delete(self, entity_name: str, /, *, prune: bool = True, missing_ok: bool = False, **kwargs) -> None:
         path_to_file = self._route(entity_name, **kwargs)
         parent = path_to_file.parent
         path_to_file.unlink(missing_ok=missing_ok)
@@ -192,12 +192,12 @@ class Database:
                     break
                 parent = parent_of_parent
 
-    def validate_all(self):
+    def validate_all(self) -> list[str]:
         errors = []
         for entity_name in self.entities:
             entity = self._get_entity(entity_name)
             schema = entity.get("schema", None)
-            for path in self.list(entity_name):
+            for path in self.list_records(entity_name):
                 try:
                     with path.open("r", encoding="utf-8") as file:
                         data = json.load(file)
