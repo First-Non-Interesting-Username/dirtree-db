@@ -10,10 +10,9 @@ Hierarchical, plain file database-like python library.
 
 <img width="2560" height="1405" alt="basic usage showcase" src="https://github.com/user-attachments/assets/06697cfd-a866-4997-8666-1a132866c4c0" />
 
-
 > "Wow, this thing is stupid." - myself, 2026
 
-The main use case for this library is colaborative data collection in a git repo.
+The main use case for this library is collaborative data collection in a git repo.
 It's terrible at that, but not as much as using it for things a database would be used for normally.
 
 ## Installation & Usage
