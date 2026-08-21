@@ -242,12 +242,12 @@ def test_duplicate_entries(tmp_path):
 
         [[entity]]
         name = "duplicate"
-        path_template = "duplicate/{slug}
-        slug_template = "duplicate.json
+        path_template = "duplicate/{slug}"
+        slug_template = "duplicate.json"
         [[entity]]
         name = "duplicate"
-        path_template = "duplicate/{slug}
-        slug_template = "duplicate.json
+        path_template = "duplicate/{slug}"
+        slug_template = "duplicate.json"
     """
 
     config_path.write_text(config_string, encoding="utf-8")
@@ -267,3 +267,25 @@ def test_exists(db_config):
         db.write(entity_name, **kwargs_dict, data=data)
 
         assert db.exists(entity_name, **kwargs_dict) == True
+
+def test_count_records(db_config):
+    db, config = db_config
+    for entity in config.get("entity", []):
+        if entity.get("schema") is not None:
+            break
+
+        path, kwargs_dict = resolve_entity_params(db, entity)
+        entity_name = entity["name"]
+        data = {"example": "example"}
+
+        db.write(entity_name, **kwargs_dict, data=data)
+
+        new_kwargs_dict = {key: f"{val}1" for key, val in kwargs_dict.items()}
+        newer_kwargs_dict = {key: f"{val}2" for key, val in kwargs_dict.items()}
+        newest_kwargs_dict = {key: f"{val}3" for key, val in kwargs_dict.items()}
+
+        db.write(entity_name, **new_kwargs_dict, data=data)
+        db.write(entity_name, **newer_kwargs_dict, data=data)
+        db.write(entity_name, **newest_kwargs_dict, data=data)
+
+        assert db.count_records(entity_name) == 4
