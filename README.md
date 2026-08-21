@@ -59,3 +59,7 @@ inputs.dirtree-db.packages.${pkgs.stdenv.hostPlatform.system}.dirtree-db
 ## Tech stack
 
 This library is made using almost only Python standard libraries, [jsonschema](https://pypi.org/project/jsonschema/) is the only exception.
+
+## Contributing
+
+If you want to contribute for some reason, make sure to read [CONTRIBUTING.md](/CONTRIBUTING.md)
