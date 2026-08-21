@@ -179,10 +179,10 @@ class Database:
                 matched_files.append(file_path)
         return matched_files
 
-    def delete(self, entity_name: str, /, *, prune: bool = True, **kwargs):
+    def delete(self, entity_name: str, /, *, prune: bool = True, missing_ok: bool = False, **kwargs):
         path_to_file = self._route(entity_name, **kwargs)
         parent = path_to_file.parent
-        path_to_file.unlink()
+        path_to_file.unlink(missing_ok=missing_ok)
         if prune:
             while parent != self.data_dir:
                 parent_of_parent = parent.parent
