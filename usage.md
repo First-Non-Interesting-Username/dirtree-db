@@ -99,6 +99,12 @@ By default, empty parent directories are cleaned up automatically. Pass `prune=F
 db.delete("note", title="hello", prune=False)
 ```
 
+You can pass `missing_ok=True` to not fail if the record is missing:
+
+```python
+db.delete("note", title="hello", missing_ok=True)
+```
+
 ## Validating data
 
 ### On write (schema validation)
