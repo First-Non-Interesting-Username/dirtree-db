@@ -8,18 +8,23 @@ from jsonschema import validate
 from pathlib import Path
 
 class StoreNotFoundError(FileNotFoundError):
+    """Raised when config file is not found"""
     pass
 
 class UnknownEntityError(KeyError):
+    """Raised when tried to write to entity that doesn't exist"""
     pass
 
 class PathKeyError(KeyError):
+    """Raised when passed wrong dict"""
     pass
 
 class ValidationError(Exception):
+    "Raised when schema is not met"
     pass
 
 class CorruptRecordError(Exception):
+   """Raised when a record is corrupt"""
    pass
 
 
@@ -219,3 +224,6 @@ class Database:
                                 errors.append(f"Record at {path} fails schema validation: {error.message}")
 
         return errors
+
+    def count_records(self, entity_name: str, /) -> int:
+        return len(self.list_records(entity_name))

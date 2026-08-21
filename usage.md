@@ -80,6 +80,12 @@ for path in db.list_records("note"):
     print(path)
 ```
 
+## Counting records
+
+`db.count_records(entity_name)` returns the number of records for an entity.
+
+<!-- There's nothing useful you could use this for -->
+
 ## Checking existence
 
 ```python

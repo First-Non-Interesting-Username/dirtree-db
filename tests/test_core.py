@@ -146,7 +146,7 @@ def test_schema(db_root, db_config):
                 path.write_text(wrong_string, encoding="utf-8")
                 db.read(entity_name, **kwargs_dict)
 
-def test_list(db_root, db_config):
+def test_list_records(db_root, db_config):
     db, config = db_config
     for entity in config.get("entity", []):
         schema = entity.get("schema")
@@ -159,11 +159,11 @@ def test_list(db_root, db_config):
         record_string = '{"example": "example"}'
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(record_string, encoding="utf-8")
-        result = db.list(entity_name)
+        result = db.list_records(entity_name)
         assert len(result) > 0 and all(item == path for item in result)
 
         path.unlink()
-        result = db.list(entity_name)
+        result = db.list_records(entity_name)
         assert len(result) == 0
 
 def test_delete(db_config):
