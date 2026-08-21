@@ -266,7 +266,7 @@ def test_exists(db_config):
 
         db.write(entity_name, **kwargs_dict, data=data)
 
-        assert db.exists(entity_name, **kwargs_dict) == True
+        assert db.exists(entity_name, **kwargs_dict)
 
 def test_count_records(db_config):
     db, config = db_config

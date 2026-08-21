@@ -25,6 +25,11 @@ def db_root(tmp_path):
         path_template = "schema/{version}/{slug}"
         slug_template = "{version}-{dummy}.json"
         schema = "schemas/schema-text.json"
+
+        [[entity]]
+        name = "long-test"
+        path_template = "{this}/{is}/{a}/{very}/{long}/{path}/{i}/{made}/{sure}/{that}/{no}/{two}/{parts}/{are}/{the}/{same}/{because}/{me}/{does}/{now}/{know}/{if}/{it}/{works}/{slug}
+        slug_template = "{the}-{slugg}-{template}-{is}-{also}-{quite}-{long}-{i}-{do}-{not}-{know}-{if}-{using}-{sword}-{good}.json"
         """
 
     config_path.write_text(config_string, encoding="utf-8")
