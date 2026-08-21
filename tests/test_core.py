@@ -253,3 +253,17 @@ def test_duplicate_entries(tmp_path):
     config_path.write_text(config_string, encoding="utf-8")
     with pytest.raises(ValueError):
         db = Database(tmp_path)
+
+def test_exists(db_config):
+    db, config = db_config
+    for entity in config.get("entity", []):
+        if entity.get("schema") is not None:
+            break
+
+        path, kwargs_dict = resolve_entity_params(db, entity)
+        entity_name = entity["name"]
+        data = {"example": "example"}
+
+        db.write(entity_name, **kwargs_dict, data=data)
+
+        assert db.exists(entity_name, **kwargs_dict) == True
