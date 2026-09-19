@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "LGPL-3.0-or-later" }
 authors = [
-    { name = "First-Non-Interesting-Username", email = "janekmusin@proton.me" },
+    { name = "first-uninteresting-username", email = "janekmusin@proton.me" },
 ]
 dependencies = [
     "jsonschema>=4.17",
@@ -25,9 +25,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/First-Non-Interesting-Username/dirtree-db"
-Repository = "https://github.com/First-Non-Interesting-Username/dirtree-db"
-Issues = "https://github.com/First-Non-Interesting-Username/dirtree-db/issues"
+Homepage = "https://github.com/first-uninteresting-username/dirtree-db"
+Repository = "https://github.com/first-uninteresting-username/dirtree-db"
+Issues = "https://github.com/first-uninteresting-username/dirtree-db/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/dirtree_db"]

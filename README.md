@@ -6,7 +6,7 @@
 
 Hierarchical, plain file database-like python library.
 
-![Hackatime Badge](https://hackatime.hackclub.com/api/v1/badge/U0A9Y38B28H/First-Non-Interesting-Username/dirtree-db)
+![Hackatime Badge](https://hackatime.hackclub.com/api/v1/badge/U0A9Y38B28H/first-uninteresting-username/dirtree-db)
 
 <img width="2560" height="1405" alt="basic usage showcase" src="https://github.com/user-attachments/assets/06697cfd-a866-4997-8666-1a132866c4c0" />
 
@@ -40,14 +40,14 @@ You will need a `config.toml` file in the path selected when defining the databa
 name = "name"
 ```
 
-Usage of functions of the `Database` class and syntax of `config.toml` are explained in a [separate document](https://github.com/First-Non-Interesting-Username/dirtree-db/blob/main/usage.md)
+Usage of functions of the `Database` class and syntax of `config.toml` are explained in a [separate document](https://github.com/first-uninteresting-username/dirtree-db/blob/main/usage.md)
 
 ### Nix
 
 If for some reason you want to use nix for this library, add this flake input to your flake:
 
 ```nix
-dirtree-db.url = "github:first-non-interesting-username/dirtree-db";
+dirtree-db.url = "github:first-uninteresting-username/dirtree-db";
 ```
 
 You can then access this package in your flake as:

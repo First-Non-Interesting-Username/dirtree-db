@@ -11,7 +11,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
-    owner = "First-Non-Interesting-Username";
+    owner = "first-uninteresting-username";
     repo = "dirtree-db";
     rev = "d50fcbc305be0dabe747ea8199a9e830097360cb";
     hash = "sha256-ft2b4tbQw9IJUYnVOzgxTqvWbcrx4hjH23oMK7xu9z4=";
@@ -31,7 +31,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
 
   meta = {
     description = "Plain file hierarchical database made in python";
-    homepage = "https://github.com/First-Non-Interesting-Username/dirtree-db";
+    homepage = "https://github.com/first-uninteresting-username/dirtree-db";
     license = lib.licenses.lgpl3Plus;
     # I'm not in lib.maintainers
     # maintainers = with lib.maintainers; [ ];
